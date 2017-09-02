@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Caja cabrona</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+      $(function() {
+        var p = $(".text-perspective");
+        var px = $(".text-perspective-x");
+        var py = $(".text-perspective-y");
+
+
+        $(".slider-perspective").slider({
+          create: function() {
+            p.text($(this).slider("value") + "px");
+            $(".container").css("perspective", "200px");
+          },
+          slide: function(event, ui) {
+            p.text(ui.value + "px");
+            $(".container").css("perspective", ui.value + "px");
+          },
+          min: 100, max: 600, value: 200, animate: "fast"
+        });
+
+        $(".slider-perspective-x").slider({
+          create: function() {
+            px.text($(this).slider("value") + "%");
+          },
+          slide: function(event, ui) {
+            px.text(ui.value + "%");
+            var origin = $(".container").css("perspective-origin").split(" ");
+            origin[0] = ui.value + "%";
+
+            $(".container").css("perspective-origin", origin[0] + " " + origin[1]);
+          },
+          min: 0, max: 200, value: 50, animate: "fast"
+        });
+
+        $(".slider-perspective-y").slider({
+          create: function() {
+            py.text($(this).slider("value") + "%");
+          },
+          slide: function(event, ui) {
+            py.text(ui.value + "%");
+            var origin = $(".container").css("perspective-origin").split(" ");
+            origin[1] = ui.value + "%";
+
+            $(".container").css("perspective-origin", origin[0] + " " + origin[1]);
+          },
+          min: 0, max: 200, value: 50, animate: "fast"
+        });
+
+        $(".button-toggle-animation").click(function(event){
+          var anim = $(".box").css("animation-name");
+          anim = anim == "none" ? "rotation" : "none";
+          $(".box").css("animation-name", anim);
+        });
+
+      });
+    </script>
+    <style media="screen">
+      @import url('https://fonts.googleapis.com/css?family=Noto+Sans');
+      * {
+        padding: 0;
+        margin: 0;
+        font-family: 'Noto Sans', 'sans-serif';
+      }
+
+      body {
+        text-align: center;
+      }
+
+      .controls {
+        text-align: right;
+        display: inline-block;
+        padding: 10px;
+        background-color: #5294e2;
+        color: white;
+        border-radius: 10px;
+      }
+
+      .controls > div {
+        width: 150px;
+        min-width: 150px;
+        display: inline-block;
+        margin-top: 10px;
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+
+      .text-perspective, .text-perspective-x, .text-perspective-y
+      , .text-rotation-x, .text-rotation-y, .text-rotation-z {
+        width: 3rem;
+        display: inline-block;
+        max-width: 3rem;
+        min-width: 3rem;
+      }
+
+      .box > div {
+        border: 5px #383c4a dashed;
+        border-radius: 5px;
+        color: white;
+        text-shadow: black 2px 2px 0px;
+        line-height: 100px;
+        text-align: center;
+        background-color: #5294e2;
+        opacity: 0.6;
+        font-size: 1rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        display: inline-block;
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+      }
+
+      @keyframes rotation {
+        0% {
+            transform: rotateY(360deg) rotateZ(90deg);
+        }
+        50% {
+            transform: rotateY(0deg) rotateZ(0deg);
+        }
+        51%  {
+            transform: rotateX(0deg) rotateZ(0deg);
+        }
+        100% {
+            transform: rotateX(180deg) rotateZ(90deg);
+        }
+      }
+
+      .container {
+        perspective: 200px;
+        perspective-origin: 50% 50%;
+        display: inline-block;
+        margin: 100px;
+        width: 100px;
+        height: 100px;
+      }
+
+      .box {
+        animation: rotation 5s infinite;
+        animation-timing-function: ease-in-out;
+        animation-direction: alternate;
+        transform-style: preserve-3d;
+        width: 100px;
+        height: 100px;
+      }
+
+      .top {
+        transform: rotateX(90deg) translateZ(50px);
+      }
+
+      .bottom {
+        transform: rotateX(270deg) translateZ(50px);
+      }
+
+      .front {
+        transform: rotateY(360deg) translateZ(50px);
+      }
+
+      .back {
+        transform: rotateY(180deg) translateZ(50px);
+      }
+
+      .left {
+        transform: rotateY(270deg) translateZ(50px);
+      }
+
+      .right {
+        transform: rotateY(90deg) translateZ(50px);
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="box">
+        <div class="top">top</div>
+        <div class="bottom">bottom</div>
+        <div class="front">front</div>
+        <div class="back">back</div>
+        <div class="left">left</div>
+        <div class="right">right</div>
+      </div>
+    </div>
+    <div>
+    <div class="controls">
+      <span>perspective:</span>
+      <div class="slider-perspective"></div>
+      <span class="text-perspective"></span>
+      <br>
+      <span>perspective-origin-x:</span>
+      <div class="slider-perspective-x"></div>
+      <span class="text-perspective-x"></span>
+      <br>
+      <span>perspective-origin-y:</span>
+      <div class="slider-perspective-y"></div>
+      <span class="text-perspective-y"></span>
+      <br>
+      <div class="ui-button ui-widget ui-corner-all button-toggle-animation">
+        Toggle animation
+      </div>
+
+    </div>
+  </div>
+  </body>
+</html>
